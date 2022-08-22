@@ -7,6 +7,8 @@ on:
   pull_request:
     branches: [master]
     types: [opened, synchronize]
+env:
+  skipTagInCommitMessage: ${{ contains(github.event.commits.*.message, '#skip') }}
 
 jobs:
   simple_deployment_pipeline:
@@ -30,10 +32,16 @@ jobs:
       #     command: npm run test:e2e
       #     start: npm run start-prod
       #     wait-on: http://localhost:5000
+      - name: check env variable commit messages
+        env:
+          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
+        run: echo '$COMMIT_MESSAGES'
+      - name: check env variable skip tag
+        run: echo '$skipTagInCommitMessages'
       - name: deploy to production server
         # paradoxically, pull requests to master AND push to master have the same name: "push".
         # So this covers both cases
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && skipTagInCommitMessage}}
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}} # secret set in github from heroku
@@ -50,7 +58,7 @@ jobs:
         with:
           fetch-depth: '0'
       - name: Bump version and push tag
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && skipTagInCommitMessage}}
         uses: anothrNick/github-tag-action@1.36.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
