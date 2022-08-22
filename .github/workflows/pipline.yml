@@ -41,7 +41,7 @@ jobs:
       - name: deploy to production server
         # paradoxically, pull requests to master AND push to master have the same name: "push".
         # So this covers both cases
-        if: ${{ github.event_name == 'push' && skipTagInCommitMessage}}
+        if: ${{ github.event_name == 'push' && $skipTagInCommitMessage}}
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}} # secret set in github from heroku
@@ -58,7 +58,7 @@ jobs:
         with:
           fetch-depth: '0'
       - name: Bump version and push tag
-        if: ${{ github.event_name == 'push' && skipTagInCommitMessage}}
+        if: ${{ github.event_name == 'push' && $skipTagInCommitMessage}}
         uses: anothrNick/github-tag-action@1.36.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
