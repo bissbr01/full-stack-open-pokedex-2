@@ -30,8 +30,10 @@ jobs:
       #     command: npm run test:e2e
       #     start: npm run start-prod
       #     wait-on: http://localhost:5000
-      # test
       - name: deploy to production server
+        # paradoxically, pull requests to master AND push to master have the same name: "push".
+        # So this covers both cases
+        if: ${{ github.event_name == 'push' }}
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}} # secret set in github from heroku
@@ -40,3 +42,13 @@ jobs:
           healthcheck: 'https://pokedex-32.herokuapp.com/health'
           checkstring: 'ok'
           rollbackonhealthcheckfailed: true
+  tag_release:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' }}
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: 'patch'
