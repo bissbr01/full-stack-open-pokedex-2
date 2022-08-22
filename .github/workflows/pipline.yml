@@ -33,7 +33,6 @@ jobs:
       #     command: npm run test:e2e
       #     start: npm run start-prod
       #     wait-on: http://localhost:5000
-      # test
       - name: check env variable commit messages
         run: echo '${{env.COMMIT_MESSAGES}}'
       - name: check env variable skip tag
