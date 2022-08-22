@@ -10,7 +10,7 @@ on:
     types: [opened, synchronize]
 env:
   COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
-  skipTagInCommitMessage: ${{ contains(join(github.event.commits.*.message, " "), '#skip') }}
+  skipTagInCommitMessage: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
 
 jobs:
   simple_deployment_pipeline:
