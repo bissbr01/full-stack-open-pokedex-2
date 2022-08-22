@@ -27,10 +27,11 @@ jobs:
       #     command: npm run test:e2e
       #     start: npm run start-prod
       #     wait-on: http://localhost:5000
-      # test
       - name: deploy to production server
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}} # secret set in github from heroku
           heroku_app_name: 'pokedex-32'
           heroku_email: 'bissell.brad@gmail.com'
+          healthcheck: 'https://pokedex-32.herokuapp.com/.herokuapp.com/health'
+          checkstring: 'ok'
