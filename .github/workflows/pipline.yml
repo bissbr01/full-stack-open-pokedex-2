@@ -31,5 +31,5 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}} # secret set in github from heroku
-          heroku_app_name: 'pokedex-31'
+          heroku_app_name: 'pokedex-32'
           heroku_email: 'bissell.brad@gmail.com'
