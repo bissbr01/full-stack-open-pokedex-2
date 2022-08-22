@@ -32,12 +32,13 @@ jobs:
       #     command: npm run test:e2e
       #     start: npm run start-prod
       #     wait-on: http://localhost:5000
+      # test
       - name: check env variable commit messages
         env:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
-        run: echo '$COMMIT_MESSAGES'
+        run: echo ${{env.COMMIT_MESSAGES}}
       - name: check env variable skip tag
-        run: echo '$skipTagInCommitMessages'
+        run: echo ${{env.skipTagInCommitMessages}}
       - name: deploy to production server
         # paradoxically, pull requests to master AND push to master have the same name: "push".
         # So this covers both cases
